@@ -1,11 +1,13 @@
 const overview = document.querySelector(".overview");
 const username = "MarkAHotchkiss";
+const unorderedList = document.querySelector(".repo-list");
 
 const getUserInfo = async function () {
     const userProfileInfo = await fetch(`https://api.github.com/users/${username}`);
     const data = await userProfileInfo.json();
     console.log(data);
     showUserInfo(data);
+    
   };
   
   getUserInfo();
@@ -25,4 +27,22 @@ const getUserInfo = async function () {
     </div>
     `;
     overview.append(div);
+    findRepos();
   };
+
+  const findRepos = async function(){
+    const repoList = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    const listOfRepos = await repoList.json(); 
+    displayRepos(listOfRepos);
+  };
+
+  const displayRepos = function (repos){
+    for (let repo of repos){
+        const repoItem = document.createElement("li");
+        repoItem.classList.add("repo");
+        repoItem.innerHTML = `<h3>${repo.name}</h3>`;
+        unorderedList.append(repoItem);
+    }
+  };
+
+  
